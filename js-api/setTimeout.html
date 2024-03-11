@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="some-element-you-want-to-animate">213</div>
+  <script>
+    const arr = []
+    const start = performance.now()
+    // setImmediate(() => {
+    //   arr.push({ time: performance.now() - start, code: 'setImmediate' })
+    // })
+    // setTimeout(() => {
+    //   arr.push({ time: performance.now() - start, code: -1 })
+    // }, -1)
+    // setTimeout(() => {
+    //   arr.push({ time: performance.now() - start, code: '' })
+    // })
+    // setTimeout(() => {
+    //   arr.push({ time: performance.now() - start, code: 0 })
+    // },0)
+    // setTimeout(() => {
+    //   arr.push({ time: performance.now() - start, code: 1 })
+    // },1)
+    // setTimeout(() => {
+    //   arr.push({ time: performance.now() - start, code: 0 })
+    // },2)
+    // setTimeout(() => {
+    //   arr.push({ time: performance.now() - start, code: 0 })
+    // },3)
+
+    // test.js
+    let times = [];
+
+    setTimeout(function run() {
+      const timeout = performance.now() - start;
+      // 20ms 结束
+      if (timeout > 20) {
+        console.log(times);
+        console.log("调用次数:", times.length);
+        return;
+      }
+      times.push(timeout);
+      // 否则重新调度
+      setTimeout(run);
+    });
+
+
+    // setTimeout(() => {
+    //   arr.map(item => {
+    //     console.log('设置延时:',item.code,'时间：',item.time)
+    //   })
+    // }, 100)
+  </script>
+  
+</body>
+</html>

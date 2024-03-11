@@ -1,0 +1,81 @@
+<!--
+ * @Author: majiahui
+ * @Description: 
+ * @Date: 2023-12-29 17:31:41
+ * @LastEditTime: 2023-12-29 18:32:13
+ * @FilePath: /my-learn/react/react-test copy.html
+-->
+<!--
+ * @Author: majiahui
+ * @Description: 
+ * @Date: 2023-12-29 14:42:03
+ * @LastEditTime: 2023-12-29 17:31:19
+ * @FilePath: /my-learn/react-test.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>react hook</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script></script>
+
+
+  <script>
+
+    let refCash
+    const useRef = (data) => {
+      if (!refCash) {
+        refCash = {
+          current: data
+        }
+      }
+      return refCash
+    }
+
+
+    const useState = (data) => {
+      if (stateCash.value === undefined) stateCash.value = data
+      return [
+        stateCash.value,
+        (data) => {
+          stateCash.value = data
+        }
+      ]
+    }
+    let isRunEffect = false
+    const useEffect = (fun, deps) => {
+      if (!deps.length && isRunEffect) return
+      fun()
+      if (!deps.length && !isRunEffect) isRunEffect = true
+    }
+
+    function MyComponent() {
+      const [count, setCount] = useState(0)
+      const fun = () => {
+        console.log(count, 'count--')
+      }
+      const timeHandle = useRef(fun)
+      timeHandle.current = fun
+
+      useEffect(() => {
+        setInterval(() => timeHandle.current(), 1000)
+      }, [])
+
+    }
+    MyComponent()
+
+    setTimeout(() => {
+      stateCash.value++
+      MyComponent()
+    }, 3000)
+
+  </script>
+</body>
+
+</html>

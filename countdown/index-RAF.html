@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="some-element-you-want-to-animate">213</div>
+  <script>
+    const element = document.getElementById("some-element-you-want-to-animate");
+    let timeCounter
+    let timing = undefined
+    let RAFStart = undefined
+    let countTimes = 10000 // 从服务器和活动开始时间计算出的时间差，这里测试用 50000 ms
+    // times 开始去执行requestAnimationFrame回调函数的时刻， 与performance.now()相等。
+    const upDateCountDown = (times) => {
+      if(!RAFStart) {
+        RAFStart = times
+        timing = -1
+      }
+      const curTiming = Math.floor((times - RAFStart)/1000)
+      if(curTiming !== timing) {
+        timing = curTiming
+        element.innerHTML = (countTimes / 1000) - timing
+        console.log('更新计时器,当前时间数字' + element.innerHTML, '当前时间戳' + (times - RAFStart))
+      }
+      if((times - RAFStart) > countTimes) {
+        console.log('计时器结束!', times - RAFStart,  countTimes)
+        return
+      }
+      window.requestAnimationFrame(upDateCountDown)
+    }
+    window.requestAnimationFrame(upDateCountDown)
+  </script>
+  
+</body>
+</html>

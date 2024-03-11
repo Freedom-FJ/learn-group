@@ -1,0 +1,73 @@
+<!--
+ * @Author: majiahui
+ * @Description: 
+ * @Date: 2023-12-29 14:42:03
+ * @LastEditTime: 2023-12-29 19:37:41
+ * @FilePath: /my-learn/react/react-test.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>react hook</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script crossorigin src="https://assets.alicdn.com/g/code/lib/react/17.0.2/umd/react.development.js"></script>
+  <script crossorigin src="https://assets.alicdn.com/g/code/lib/react-dom/17.0.2/umd/react-dom.development.js"></script>
+  <script></script>
+
+
+  <script>
+    window.onload = function () {
+      let _count = 0;
+      const {
+        useState,
+        useEffect,
+        createElement
+      } = React
+
+      const root = document.getElementById('root')
+
+      // function Counter() {
+      //   const [count, setCount] = useState(0)
+      //   const fun = () => {
+      //     console.log(count, '----count-setInterval')
+      //   }
+      //   const timeHandle = React.useRef(fun)
+      //   timeHandle.current = fun
+      //   useEffect(() => {
+      //     setInterval(() => timeHandle.current(), 2000)
+      //   }, [])
+      //   console.log(count, '----count')
+      //   return createElement('button', {
+      //     onClick: () => {
+      //       setCount(count => count + 1)
+      //     }
+      //   }, count)
+      // }
+
+      function Counter() {
+        const [count, setCount] = useState(0)
+        console.log(1)
+        useEffect(() => {
+          console.log(2)
+        }, [count])
+        useEffect(() => {
+          console.log(3)
+        }, []) // 加上依赖项
+        return createElement('button', {
+          onClick: () => {
+            setCount(count => count + 1)
+          }
+        }, count)
+      }
+      ReactDOM.render(createElement(Counter), root)
+    }
+  </script>
+</body>
+
+</html>

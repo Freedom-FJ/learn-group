@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Lazy-Load</title>
+    <style>
+      @keyframes move {
+          from {
+              left: 0;
+          }
+          to {
+              left: 100%;
+          }
+      }
+      .move {
+          position: absolute;
+          animation: move 5s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="move">123123123</div>
+    </div>
+    <script>
+      function fnc () {
+          let i = 0
+          const start = performance.now()
+          console.log(navigator.scheduling.isInputPending())
+          while (performance.now() - start <= 5000) {
+            i++
+          }
+          console.log(navigator.scheduling.isInputPending()) 
+          return i
+        }
+        setTimeout(() => {
+          fnc()
+          setTimeout(() => {
+            console.log(navigator.scheduling.isInputPending())
+          }, 1000)
+      }, 1000)
+    </script>
+  </body>
+</html>
