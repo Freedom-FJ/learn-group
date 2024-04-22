@@ -1,0 +1,162 @@
+<!--
+ * @Author: majiahui
+ * @Description: 
+ * @Date: 2023-12-29 14:42:03
+ * @LastEditTime: 2024-04-22 16:57:28
+ * @FilePath: /my-learn/react/react-test.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>react hook</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script crossorigin src="https://assets.alicdn.com/g/code/lib/react/17.0.2/umd/react.development.js"></script>
+  <script crossorigin src="https://assets.alicdn.com/g/code/lib/react-dom/17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script></script>
+
+
+  <script type="text/babel">
+    window.onload = function () {
+      const {
+        useState,
+        useEffect,
+        useRef,
+        createElement
+      } = React
+
+      const root = document.getElementById('root')
+      const animationName = `rollingsAnnualTasks${Math.floor(Math.random() * 100000)}` // 动画名称
+      function Rolling() {
+        const [isRolling, setRolling] = useState(true)
+        const rollingBodyRef = useRef()
+        const time = 3
+        useEffect(() => {
+          controlAnimation()
+        }, [])
+
+        const clearAnimation = () => {
+          const style = document.styleSheets[0]
+          if (!style) return
+          const styleArray = [].slice.call(style.cssRules) // 将伪数组变成数组
+          const index = styleArray.findIndex(item => item.name === animationName)
+          if (index !== -1) style.deleteRule(index) // 如果有此动画就先删除
+          return style
+        }
+
+        const controlAnimation = () => {
+          const dom = rollingBodyRef.current
+          let distance = 508
+          if (!dom) return
+          const style = clearAnimation()
+          if (!isRolling || !style) return
+          dom.style.animationPlayState = '' // 继续动画
+          style.insertRule(`@keyframes ${animationName} {0%{ transform: translateX(0%);}100%{transform: translateY(-${distance}px);}}`, 0)
+        }
+
+        const hoverStart = () => {
+          setRolling(false)
+        }
+        const hoverEnd = () => {
+          setRolling(true)
+        }
+
+
+        /**
+         * 鼠标按下边
+         */
+        const onMouseDownBorder = (e) => {
+          const element = document.getElementById(animationName)
+          if (!element) return
+          const animation = element.getAnimations()
+          const startDis = e.clientY
+          let currDistance = 508
+          const speed = currDistance / (time * 1000)
+          let rememberDis
+          const mouseMoveHander = (e) => {
+            const endDis = e.clientY
+            const distance = endDis - startDis
+            animation.forEach((item) => {
+              if (!rememberDis) rememberDis = (item.currentTime) || 0
+              const currTime = rememberDis - (distance / speed)
+              item.currentTime = currTime < 0 ? time * 1000 + currTime : currTime
+            })
+          }
+          document.addEventListener('mousemove', mouseMoveHander)
+          const mouseUpHandler = (e) => {
+            document.removeEventListener('mousemove', mouseMoveHander)
+            document.removeEventListener('mouseup', mouseUpHandler)
+          }
+          document.addEventListener('mouseup', mouseUpHandler)
+        }
+
+        return (
+          <div className="rolling-box" >
+            <div
+              id={animationName}
+              ref={rollingBodyRef}
+              className="rolling-offset-box"
+              onMouseEnter={hoverStart}
+              onMouseLeave={hoverEnd}
+              onMouseDown={onMouseDownBorder}
+              style={{
+                animation: `${animationName} ${time}s linear infinite`,
+                animationPlayState: isRolling ? 'running' : 'paused',
+              }}>
+              {new Array(5).fill(0).map((_, index) => {
+                return <div className="rolling-item" key={index}>hello world {index}</div>
+              })}
+              {new Array(5).fill(0).map((_, index) => {
+                return <div className="rolling-item" key={index}>hello world {index}</div>
+              })}
+            </div>
+          </div>
+        )
+      }
+      ReactDOM.render(createElement(Rolling), root)
+    }
+  </script>
+</body>
+<style>
+  #root {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .rolling-offset-box {
+    width: 100%;
+  }
+
+  .rolling-box {
+    height: 300px;
+    width: 100px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .07), 0 1px 4px rgba(0, 0, 0, .07);
+  }
+
+  .rolling-item {
+    height: 100px;
+    width: 100px;
+    color: white;
+    text-align: center;
+    line-height: 100px;
+    margin: 2px 0;
+    background-color: #79bbff;
+  }
+</style>
+
+</html>
