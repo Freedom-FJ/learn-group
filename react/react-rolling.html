@@ -2,7 +2,7 @@
  * @Author: majiahui
  * @Description: 
  * @Date: 2023-12-29 14:42:03
- * @LastEditTime: 2024-04-22 19:06:38
+ * @LastEditTime: 2024-04-23 17:22:32
  * @FilePath: /my-learn/react/react-test.html
 -->
 <!DOCTYPE html>
@@ -35,10 +35,13 @@
       } = React
 
       const root = document.getElementById('root')
-      const animationName = `rollingsAnnualTasks${Math.floor(Math.random() * 100000)}` // 动画名称
       function Rolling() {
         const [isRolling, setRolling] = useState(true)
+        // 动画名称
+        const animationNameRef = useRef(`rollingsAnnualTasks${Math.floor(Math.random() * 100000)}`) // 动画名称
+        // 滚动盒子dom
         const rollingBodyRef = useRef()
+        // 滚动时长
         const time = 3
         useEffect(() => {
           controlAnimation()
@@ -48,19 +51,19 @@
           const style = document.styleSheets[0]
           if (!style) return
           const styleArray = [].slice.call(style.cssRules) // 将伪数组变成数组
-          const index = styleArray.findIndex(item => item.name === animationName)
+          const index = styleArray.findIndex(item => item.name === animationNameRef.current)
           if (index !== -1) style.deleteRule(index) // 如果有此动画就先删除
           return style
         }
 
         const controlAnimation = () => {
           const dom = rollingBodyRef.current
-          let distance = 508
+          const distance = getDistance().currDistance
           if (!dom) return
           const style = clearAnimation()
           if (!isRolling || !style) return
           dom.style.animationPlayState = '' // 继续动画
-          style.insertRule(`@keyframes ${animationName} {0%{ transform: translateX(0%);}100%{transform: translateY(-${distance}px);}}`, 0)
+          style.insertRule(`@keyframes ${animationNameRef.current} {0%{ transform: translateX(0%);}100%{transform: translateY(-${distance}px);}}`, 0)
         }
 
         const hoverStart = () => {
@@ -69,17 +72,22 @@
         const hoverEnd = () => {
           setRolling(true)
         }
-
+        // 获取dom大小
+        const getDistance = () => {
+            const dom = rollingBodyRef.current
+            const currDistance = dom.offsetHeight / 2
+            return { currDistance }
+        }
 
         /**
          * 鼠标按下边
          */
         const onMouseDownBorder = (e) => {
-          const element = document.getElementById(animationName)
+          const element = document.getElementById(animationNameRef.current)
           if (!element) return
           const animation = element.getAnimations()
           const startDis = e.clientY
-          let currDistance = 508
+          const currDistance = getDistance().currDistance
           const speed = currDistance / (time * 1000)
           let rememberDis
           const mouseMoveHander = (e) => {
@@ -102,14 +110,14 @@
         return (
           <div className="rolling-box" >
             <div
-              id={animationName}
+              id={animationNameRef.current}
               ref={rollingBodyRef}
               className="rolling-offset-box"
               onMouseEnter={hoverStart}
               onMouseLeave={hoverEnd}
               onMouseDown={onMouseDownBorder}
               style={{
-                animation: `${animationName} ${time}s linear infinite`,
+                animation: `${animationNameRef.current} ${time}s linear infinite`,
                 animationPlayState: isRolling ? 'running' : 'paused',
               }}>
               {new Array(5).fill(0).map((_, index) => {
