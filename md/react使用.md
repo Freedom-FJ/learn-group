@@ -99,7 +99,14 @@ import PageBoundary, { PageBoundaryRef } from '@/components/page-boundary';
 const pageOutletRef = useRef<PageBoundaryRef>(null);
 return ( <PageBoundary ref={pageOutletRef}></PageBoundary>)
 ```
+```jsx
+import { Drawer } from '@alifd/next';
+import { forwardRef, LegacyRef, useEffect, useRef, useState } from 'react';
 
+forwardRef(function DrawerPro(props: DrawerProProps, ref: LegacyRef<Drawer>) {
+  ...
+}
+```
 ## 组建继承
 使用 ...props 和 forwardRef 完全继承一个组建的props属性和ref绑定方法
 ```tsx
@@ -141,7 +148,7 @@ setCount((count)=> count+1)
 setCount((count)=> count+1)
 setCount((count)=> count+1)
 
-<div>{ count }</div>   // 渲染 3
+<div>{ count }</div>   // 渲染 3 只执行一次
 ```
 ## TS类型
 
