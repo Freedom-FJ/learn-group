@@ -1,0 +1,15 @@
+{
+  "name": "learn-group",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": "https://github.com/Freedom-FJ/learn-group.git",
+  "dependencies": {
+    "react": "^18.3.1"
+  }
+}
